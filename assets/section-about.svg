@@ -1,0 +1,8 @@
+<svg width="1200" height="240" viewBox="0 0 1200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="240" rx="18" fill="#141414" stroke="rgba(255,255,255,0.08)"/>
+  <text x="34" y="42" fill="#7DAADC" font-family="'JetBrains Mono', monospace" font-size="14">about</text>
+  <text x="34" y="84" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="24">Développeur JavaScript freelance, autodidacte, orienté bots Discord,</text>
+  <text x="34" y="118" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="24">APIs propres, dashboards temps réel et outils conçus pour être utiles.</text>
+  <text x="34" y="166" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="18">Je construis souvent de bout en bout : backend, front, OAuth, mails, DNS, infra, branding.</text>
+  <text x="34" y="202" fill="#E1EBF5" font-family="'JetBrains Mono', monospace" font-size="16">Même thème visuel que ix-xs.dev : fond sombre, cartes nettes, texte clair, bordures très discrètes.</text>
+</svg>
