@@ -1,0 +1,19 @@
+<svg width="1200" height="260" viewBox="0 0 1200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="260" rx="6" fill="#141414" stroke="rgba(255,255,255,0.08)" />
+  <rect x="38" y="20" height="24" rx="3" fill="rgba(0,0,0,0.30)" />
+  <text x="48" y="36" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="11">intro.json</text>
+
+  <!-- ligne focus / stack compactée au-dessus du hero -->
+  <text x="42" y="76" fill="#7DAADC" font-family="'JetBrains Mono', monospace" font-size="12">focus</text>
+  <text x="100" y="76" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="12">
+    bots discord · apis · dashboards · auth · mail · dns/vps
+  </text>
+
+  <!-- hero -->
+  <text x="42" y="106" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="12">ix_xs • dev javascript freelance</text>
+  <text x="42" y="130" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">Salut, moi c'est Ix-xs. Je code en JavaScript depuis bientôt 5 ans,</text>
+  <text x="42" y="150" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">en autodidacte. Je fais des bots Discord, des APIs avec Fastify,</text>
+  <text x="42" y="170" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">des dashboards temps réel et quelques apps desktop.</text>
+  <text x="42" y="194" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">Je touche aussi au branding, à la config VPS, DNS, DKIM/DMARC,</text>
+  <text x="42" y="214" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">et au mailing. Bref, j'aime construire des trucs de bout en bout.</text>
+</svg>
