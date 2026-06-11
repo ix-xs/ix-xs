@@ -1,0 +1,21 @@
+<svg width="1200" height="260" viewBox="0 0 1200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="260" rx="6" fill="#141414" stroke="rgba(255,255,255,0.08)" />
+  <rect x="38" y="20" height="24" rx="3" fill="rgba(0,0,0,0.30)" />
+  <text x="48" y="36" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="11">contact.info</text>
+  
+  <text x="42" y="82" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">Pas de formulaire. Choisis ton canal, je réponds vite.</text>
+  <text x="42" y="102" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">Discord pour le rapide, mail pour les projets, Malt/Fiverr pour signer.</text>
+
+  <text x="42" y="140" fill="#7DAADC" font-family="'JetBrains Mono', monospace" font-size="13">discord</text>
+  <text x="140" y="140" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">ix_xs</text>
+
+  <text x="42" y="168" fill="#7DAADC" font-family="'JetBrains Mono', monospace" font-size="13">email</text>
+  <text x="140" y="168" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">contact@ix-xs.dev</text>
+
+  <text x="42" y="196" fill="#7DAADC" font-family="'JetBrains Mono', monospace" font-size="13">malt</text>
+  <text x="140" y="196" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">malt.fr/profile/maximecobigo</text>
+
+  <text x="42" y="224" fill="#7DAADC" font-family="'JetBrains Mono', monospace" font-size="13">fiverr</text>
+  <text x="140" y="224" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">fr.fiverr.com/s/dDvPRqg</text>
+
+</svg>
