@@ -1,0 +1,10 @@
+<svg width="586" height="300" viewBox="0 0 586 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="586" height="300" rx="18" fill="#141414" stroke="rgba(255,255,255,0.08)"/>
+  <text x="26" y="40" fill="#7DAADC" font-family="'JetBrains Mono', monospace" font-size="14">services</text>
+  <text x="26" y="82" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">• bots discord complets avec dashboard web</text>
+  <text x="26" y="114" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">• apis fastify et dashboards admin sur mesure</text>
+  <text x="26" y="146" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">• oauth2 discord / google / github</text>
+  <text x="26" y="178" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">• mails transactionnels et délivrabilité</text>
+  <text x="26" y="210" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">• vps, dns, dkim, dmarc, spf</text>
+  <text x="26" y="254" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="14">box sombre #141414 • border rgba(255,255,255,0.08) • texte #F0F0EB</text>
+</svg>
