@@ -1,0 +1,12 @@
+<svg width="1200" height="120" viewBox="0 0 1200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="120" fill="#1E1E1E" />
+  <rect x="180" y="30" width="840" height="60" rx="9999" fill="#1E1E1E" stroke="rgba(255,255,255,0.08)" />
+  <text x="210" y="67" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="14">ix-xs</text>
+  <text x="250" y="67" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="14">.dev</text>
+
+  <text x="480" y="67" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">about</text>
+  <text x="550" y="67" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">stack</text>
+  <text x="620" y="67" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">services</text>
+  <text x="710" y="67" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">open-source</text>
+  <text x="830" y="67" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">contact</text>
+</svg>
