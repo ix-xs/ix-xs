@@ -1,24 +1,23 @@
-<svg width="1200" height="300" viewBox="0 0 1200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="300" rx="6" fill="#141414" stroke="rgba(255,255,255,0.08)" />
+<svg width="1200" height="320" viewBox="0 0 1200 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="320" rx="6" fill="#141414" stroke="rgba(255,255,255,0.08)" />
   <rect x="38" y="20" height="24" rx="3" fill="rgba(0,0,0,0.30)" />
   <text x="48" y="36" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="11">services.list</text>
-  
+
   <text x="42" y="82" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">bots discord :</text>
   <text x="180" y="82" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">Bots complets avec dashboard web,</text>
   <text x="180" y="102" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">slash commands, embeds, interactions, temps réel.</text>
 
-  <text x="42" y="132" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">webapps & apis :</text>
+  <text x="42" y="132" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">webapps &amp; apis :</text>
   <text x="210" y="132" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">APIs Fastify, dashboards admin, sites vitrine,</text>
   <text x="210" y="152" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">intégrations OAuth.</text>
 
-  <text x="42" y="182" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">apps & desktop :</text>
+  <text x="42" y="182" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">apps &amp; desktop :</text>
   <text x="210" y="182" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">Applications Electron pour outils internes et</text>
   <text x="210" y="202" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">compagnons d'apps.</text>
 
   <text x="42" y="232" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">branding :</text>
   <text x="150" y="232" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">Marque, logo, identité visuelle, site vitrine.</text>
 
-  <text x="42" y="262" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">mailing & infra :</text>
+  <text x="42" y="262" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="13">mailing &amp; infra :</text>
   <text x="190" y="262" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">Formulaires, mails transactionnels, DNS, DKIM, DMARC, SPF.</text>
-
 </svg>
