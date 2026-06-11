@@ -1,0 +1,10 @@
+<svg width="586" height="300" viewBox="0 0 586 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="586" height="300" rx="18" fill="#141414" stroke="rgba(255,255,255,0.08)"/>
+  <text x="26" y="40" fill="#7DAADC" font-family="'JetBrains Mono', monospace" font-size="14">open source</text>
+  <text x="26" y="82" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">@ix-xs/youtube.api</text>
+  <text x="26" y="114" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">@ix-xs/twitch.api</text>
+  <text x="26" y="146" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">@ix-xs/djs-bot</text>
+  <text x="26" y="178" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">@ix-xs/node-comfort</text>
+  <text x="26" y="210" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="17">@ix-xs/metamob.api</text>
+  <text x="26" y="254" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="14">helpers et wrappers npm dans la continuité directe du site.</text>
+</svg>
