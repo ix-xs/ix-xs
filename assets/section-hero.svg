@@ -1,0 +1,10 @@
+<svg width="1200" height="260" viewBox="0 0 1200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="260" fill="#1E1E1E" />
+  <rect x="260" y="40" width="680" height="180" rx="12" fill="#141414" stroke="rgba(255,255,255,0.08)" />
+  <text x="280" y="72" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="13">ix_xs • dev javascript freelance</text>
+  <text x="280" y="110" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="14">Salut, moi c'est Ix-xs. Je code en JavaScript depuis bientôt 5 ans,</text>
+  <text x="280" y="130" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="14">en autodidacte. Je fais des bots Discord, des APIs avec Fastify,</text>
+  <text x="280" y="150" fill="#F0F0EB" font-family="'JetBrains Mono', monospace" font-size="14">des dashboards temps réel et quelques apps desktop.</text>
+  <text x="280" y="178" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="14">Je touche aussi au branding, à la config VPS, DNS, DKIM/DMARC,</text>
+  <text x="280" y="198" fill="#6F7276" font-family="'JetBrains Mono', monospace" font-size="14">et au mailing. Bref, j'aime construire des trucs de bout en bout.</text>
+</svg>
