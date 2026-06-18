@@ -2,25 +2,15 @@
 
 > “Et si on parlait de vos projets ?”  
 
-Bots Discord, APIs Fastify, dashboards temps réel, petites webapps, outils desktop, branding et infra légère : je conçois des solutions JavaScript propres, utiles, et pensées de bout en bout.
-
----
-
-## à propos
-
-J’ai commencé par bidouiller des bots Discord. Très vite, il a fallu un dashboard, donc une API, donc un front, donc une base de données, donc un VPS, donc des mails qui arrivent vraiment. De fil en aiguille, je me suis construit une stack 100 % JavaScript dans laquelle je suis à l’aise.
-
-Aujourd’hui je bosse en freelance, en solo ou avec des designers et agences.  
-Je fais le dev, parfois le branding, souvent l’infra qui va avec.
+Bots Discord, APIs Fastify, dashboards temps réel, webapps, outils desktop, branding, landing page, site pro et infra : je conçois des solutions JavaScript propres, utiles, et pensées de bout en bout.
 
 ---
 
 ## focus
 
 ```txt
-types   : bots discord, apis, dashboards temps réel,
-          petites webapps, outils internes, infra légère
-stack   : node.js, fastify, discord.js, vanilla js
+types   : bots discord, apis, dashboards temps réel, webapps, outils internes, landing page, site pro.
+stack   : node.js, fastify, discord.js, vanilla js, pas de framework client lourd.
 profil  : freelance, remote, FR/EN
 ```
 
@@ -30,27 +20,27 @@ profil  : freelance, remote, FR/EN
 
 ### backend
 
-- **Node.js** (expert)
-- **Fastify** (expert)
-- **discord.js** (expert)
+- **Node.js**
+- **Fastify**
+- **discord.js**
 - SSE, REST, websockets
 
 ### front & desktop
 
-- **JavaScript vanilla** (expert)
-- HTML, CSS
-- Electron (débutant)
+- **JavaScript vanilla**
+- HTML, CSS, EJS, HTMX, GSAP
+- Electron
 
 ### auth & mail
 
-- OAuth2 Discord / Google / GitHub
-- Resend, Nodemailer
+- OAuth2 Discord / Google / GitHub ..
+- Resend, Nodemailer, DKIM, SPF, DMARK
 
 ### infra
 
-- VPS, OVH
+- VPS, OVH, Cloudflare
 - DNS
-- SQL (débutant)
+- SQL, SQLite, in-memory, mangoDB, redis ..
 
 ---
 
@@ -66,8 +56,10 @@ profil  : freelance, remote, FR/EN
 
 - APIs Fastify performantes et typées
 - Dashboards admin sur mesure
-- Sites vitrine légers, sans usine à gaz front
+- Sites vitrine, sans usine à gaz front
 - Intégrations OAuth (Discord, Google, GitHub)
+- Landing page
+- Site professionnel
 
 ### apps & desktop
 
@@ -79,8 +71,9 @@ profil  : freelance, remote, FR/EN
 
 - Création de marque (nom, ton, messages clés)
 - Logos et identités visuelles simples et lisibles
-- Petits sites vitrine / landing pages
+- Sites vitrine / landing pages
 - Mise en place d’une présence de base sur les réseaux
+- Créations de documents réutilisables avec **votre** identité (générateur de factures, devis, rapport de services ..)
 
 ### mailing & contact
 
@@ -90,15 +83,19 @@ profil  : freelance, remote, FR/EN
 
 ### infra & domaines
 
-- Mise en route VPS (OVH, etc.)
+- Mise en route VPS (OVH, Cloudflare, hébergeur indépendant ..)
 - Configuration nom de domaine / DNS
 
 ---
 
 ## open‑source
 
-Quelques wrappers et helpers JavaScript publiés sur npm sous `@ix-xs`.  
-L’objectif à terme : en faire un vrai pôle utile à la commu dev.
+Quelques wrappers et helpers JavaScript publiés sur npm sous `@ix-xs`, développés à l’origine pour des besoins personnels. L’objectif à terme est d’en faire un véritable pôle utile à la communauté développeur.
+La plupart des packages ne sont pas encore opérationnels pour une utilisation grand publique. À l’exception possible de :
+- @ix-xs/metamob.api : wrapper API Metamob (Dofus), probablement complet et à jour.
+- @ix-xs/node-comfort : helpers et utilitaires Node.js, incomplet mais fonctionnel.
+
+Les autres sont en cours de développement et seront mis à jour sur mon temps libre pour devenir détaillés, complets et prêts pour une utilisation grand publique :
 
 | package                     | description                           |
 |----------------------------|---------------------------------------|
@@ -111,13 +108,12 @@ L’objectif à terme : en faire un vrai pôle utile à la commu dev.
 ---
 
 ## contact
-
-Pas de formulaire.  
+ 
 Choisis ton canal, je réponds vite :
 
 - Discord pour ce qui est rapide
 - Mail pour les projets
-- Malt ou Fiverr pour contractualiser direct
+- Malt pour contractualiser direct
 
 ### Discord
 
@@ -133,15 +129,12 @@ ix_xs
 contact@ix-xs.dev
 ```
 
-Usage : projets, devis, threads sérieux — réponse en général &lt; 24h.
+Usage : projets, devis, threads sérieux → réponse en général &lt; 24h.
 
 ### Freelancing
 
-- **Malt** (freelance · France)  
+- **Malt** (freelance · France)
   [malt.fr/profile/maximecobigo](https://malt.fr/profile/maximecobigo)
-
-- **Fiverr** (gigs · international)  
-  [fr.fiverr.com/s/dDvPRqg](https://fr.fiverr.com/s/dDvPRqg)
 
 ---
 
@@ -151,4 +144,3 @@ Usage : projets, devis, threads sérieux — réponse en général &lt; 24h.
 - Discord : `ix_xs`
 - Email : [contact@ix-xs.dev](mailto:contact@ix-xs.dev)
 - Malt : [malt.fr/profile/maximecobigo](https://malt.fr/profile/maximecobigo)
-- Fiverr : [fr.fiverr.com/s/dDvPRqg](https://fr.fiverr.com/s/dDvPRqg)
