@@ -1,3 +1,5 @@
+[![Discord Presence](https://lanyard.cnrad.dev/api/782307250751406091)](https://discord.com/users/782307250751406091)
+
 # Hey, moi c'est Ix-xs 👋
 
 Je suis développeur full‑stack JavaScript basé à La Seyne-sur-Mer.  
@@ -29,12 +31,3 @@ Je construis des bots Discord, des applications web et des outils sur mesure pou
 - Plateforme d’identité avec auth et gestion de profils
 - Sites vitrines et webapps pour petites entreprises
 - Outils autour de discord.js (`@ix-xs/djs-bot`, utilitaires Node.js)
-
----
-
-## Me trouver
-
-[![Discord Presence](https://lanyard.cnrad.dev/api/782307250751406091)](https://discord.com/users/782307250751406091)
-
-- GitHub : [ix-xs](https://github.com/ix-xs)
-- Site perso : [ix-xs.dev](https://ix-xs.dev)
