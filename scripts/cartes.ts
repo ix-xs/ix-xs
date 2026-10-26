@@ -82,17 +82,16 @@ function entete(): string {
     medaillon(bord + 128, 134, 96) +
     `<text class="m" x="44" y="58" font-size="12.5" fill="${c.rose}" letter-spacing=".08em">00 · ${echappe(profil.role.toUpperCase())}</text>` +
     `<text class="b" x="42" y="124" font-size="66" font-weight="800" fill="${c.texte}" letter-spacing="-.02em">${echappe(profil.nom)}</text>` +
-    phrase(44, 166, [profil.phrase], 0) +
-    `<text class="m" x="44" y="196" font-size="12.5" fill="${c.terne}">${echappe(profil.lieu)}</text>` +
-    `<text class="g" x="44" y="236" font-size="19" fill="${c.rose}">${echappe(profil.devise)}</text>` +
-    `<g fill="${c.rose}">${trace(13, 52, 272, 44, 1.1, 0.3)}</g>` +
+    phrase(44, 170, [profil.phrase], 0) +
+    `<text class="g" x="44" y="222" font-size="19" fill="${c.rose}">${echappe(profil.devise)}</text>` +
+    `<g fill="${c.rose}">${trace(13, 52, 266, 44, 1.1, 0.3)}</g>` +
     `</g>`;
   return svg({ l, h, titre: `${profil.nom}: ${profil.phrase}`, polices: ['b', 'm', 'g'], style: pasAnimes, corps });
 }
 
 function enteteEtroit(): string {
   const l = etroit;
-  const h = 330;
+  const h = 312;
   const corps =
     `<clipPath id="cadre"><rect width="${l}" height="${h}" rx="20"/></clipPath><g clip-path="url(#cadre)">` +
     `<rect width="${l}" height="${h}" fill="${c.fond}"/>` +
@@ -101,12 +100,11 @@ function enteteEtroit(): string {
     `<text class="m" x="26" y="40" font-size="11.5" fill="${c.rose}" letter-spacing=".08em">00 · ${echappe(profil.role.toUpperCase())}</text>` +
     `<text class="b" x="24" y="104" font-size="58" font-weight="800" fill="${c.texte}" letter-spacing="-.02em">${echappe(profil.nom)}</text>` +
     phrase(26, 158, profil.phrase.split(/(?<=,) /), 28) +
-    `<text class="m" x="26" y="218" font-size="12" fill="${c.terne}">${echappe(profil.lieu)}</text>` +
     profil.devise
       .split(/(?<=[.]) /)
-      .map((t, i) => `<text class="g" x="26" y="${254 + i * 23}" font-size="18" fill="${c.rose}">${echappe(t)}</text>`)
+      .map((t, i) => `<text class="g" x="26" y="${232 + i * 23}" font-size="18" fill="${c.rose}">${echappe(t)}</text>`)
       .join('') +
-    `<g fill="${c.rose}">${trace(8, 34, 316, 40, 1, 0.4)}</g>` +
+    `<g fill="${c.rose}">${trace(8, 34, 296, 40, 1, 0.4)}</g>` +
     `</g>`;
   return svg({ l, h, titre: `${profil.nom}: ${profil.phrase}`, polices: ['b', 'm', 'g'], style: pasAnimes, corps });
 }
@@ -214,7 +212,7 @@ const source = (x: number, y: number, r: Releve, ancre = 'start'): string =>
 
 function carte(outil: Outil, r: Releve, note?: string): string {
   const l = etroit;
-  const h = 272;
+  const h = 282;
   const haut = 82;
   const lignes = coupe(outil.ligne, 15, l - 44, 2);
   const corps =
@@ -229,14 +227,14 @@ function carte(outil: Outil, r: Releve, note?: string): string {
     lignes.map((t, i) => `<text class="b" x="22" y="${120 + i * 21}" font-size="15" fill="${c.doux}">${echappe(t)}</text>`).join('') +
     courbe(r.serie, 22, 162, l - 44, 34, `courbe-${outil.depot.replace(/\W/g, '')}`) +
     rangee(22, 210, badges(r), 11) +
-    source(22, h - 14, r) +
+    source(22, h - 18, r) +
     `</g>`;
   return svg({ l, h, titre: `${outil.depot}: ${outil.ligne}`, polices: note ? ['b', 'm', 'g'] : ['b', 'm'], style: cligne, corps });
 }
 
 function une(outil: Outil, r: Releve): string {
   const l = 880;
-  const h = 236;
+  const h = 258;
   const bord = 300;
   const x0 = bord + 44;
   const lignes = coupe(outil.ligne, 19, l - x0 - 30, 2);
@@ -252,7 +250,7 @@ function une(outil: Outil, r: Releve): string {
     lignes.map((t, i) => `<text class="b" x="${x0}" y="${82 + i * 26}" font-size="19" fill="${c.doux}">${echappe(t)}</text>`).join('') +
     courbe(r.serie, x0, 132, l - x0 - 34, 36, 'courbe-une') +
     rangee(x0, 184, badges(r), 12) +
-    source(l - 34, h - 16, r, 'end') +
+    source(l - 34, h - 20, r, 'end') +
     `</g>`;
   return svg({ l, h, titre: `${outil.depot}: ${outil.ligne}`, polices: ['b', 'm', 'g'], style: cligne, corps });
 }

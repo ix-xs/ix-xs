@@ -4,7 +4,6 @@ export const profil = {
   phrase: 'I build websites, Discord bots and tools.',
   marque: 'websites',
   role: 'independent developer',
-  lieu: 'La Seyne-sur-Mer, France',
   devise: "A perfectly normal GitHub profile. At least, that's what we tell the cat.",
 };
 

@@ -1,4 +1,4 @@
-<a href="https://ix-xs.dev"><picture><source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/ix-xs/ix-xs/output/entete-mobile.svg"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/entete.svg" width="100%" alt="ix-xs, independent developer in La Seyne-sur-Mer: I build websites, Discord bots and tools."></picture></a>
+<a href="https://ix-xs.dev"><picture><source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/ix-xs/ix-xs/output/entete-mobile.svg"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/entete.svg" width="100%" alt="ix-xs, independent developer: I build websites, Discord bots and tools."></picture></a>
 
 <br>
 
