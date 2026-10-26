@@ -1,0 +1,9 @@
+{
+  "name": "carte-discord",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node dev.ts",
+    "deploy": "npx wrangler@4 deploy"
+  }
+}
