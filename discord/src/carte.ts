@@ -48,6 +48,16 @@ export interface Profil {
 
 export type Images = Record<string, string | undefined>;
 
+// l'avatar et la décoration servent deux fois : on les pose une fois dans <defs>, puis on les réutilise
+const pose = (nom: string, x: number, y: number, taille: number): string =>
+  `<use href="#i-${nom}" transform="translate(${x} ${y}) scale(${taille})"/>`;
+
+const reserve = (images: Images): string =>
+  (['avatar', 'deco'] as const)
+    .filter((nom) => images[nom])
+    .map((nom) => `<image id="i-${nom}" href="${images[nom]}" width="1" height="1" preserveAspectRatio="xMidYMid slice"/>`)
+    .join('');
+
 const verbes: Record<number, string> = { 0: 'playing', 1: 'streaming', 2: 'listening to', 3: 'watching', 5: 'competing in' };
 const statuts: Record<Statut, string> = { online: 'online', idle: 'idle', dnd: 'do not disturb', offline: 'offline' };
 const repos: Record<'la' | 'absent', string> = {
@@ -218,9 +228,9 @@ function medaillon(images: Images, cx: number, cy: number, r: number, fond: stri
     `<circle cx="${cx}" cy="${cy}" r="${r + 6}" fill="${fond}"/>` +
     `<clipPath id="avatar"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath>` +
     (images['avatar']
-      ? `<image href="${images['avatar']}" x="${cx - r}" y="${cy - r}" width="${r * 2}" height="${r * 2}" clip-path="url(#avatar)" preserveAspectRatio="xMidYMid slice"/>`
+      ? `<g clip-path="url(#avatar)">${pose('avatar', cx - r, cy - r, r * 2)}</g>`
       : `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c.rose}"/>`) +
-    (images['deco'] ? `<image href="${images['deco']}" x="${cx - d / 2}" y="${cy - d / 2}" width="${d}" height="${d}"/>` : '') +
+    (images['deco'] ? pose('deco', cx - d / 2, cy - d / 2, d) : '') +
     regard(statut, cx + r * 0.72, cy + r * 0.78, fond)
   );
 }
@@ -387,8 +397,8 @@ export function rendre(
       (images['plaque'] ? `<image href="${images['plaque']}" x="${x}" y="${y}" width="${l}" height="${h}" preserveAspectRatio="xMaxYMid slice"/>` : '') +
       `</g>` +
       `<clipPath id="mini"><circle cx="${x + 32}" cy="${y + 30}" r="19"/></clipPath>` +
-      (images['avatar'] ? `<image href="${images['avatar']}" x="${x + 13}" y="${y + 11}" width="38" height="38" clip-path="url(#mini)"/>` : '') +
-      (images['deco'] ? `<image href="${images['deco']}" x="${x + 32 - d / 2}" y="${y + 30 - d / 2}" width="${d}" height="${d}"/>` : '') +
+      (images['avatar'] ? `<g clip-path="url(#mini)">${pose('avatar', x + 13, y + 11, 38)}</g>` : '') +
+      (images['deco'] ? pose('deco', x + 32 - d / 2, y + 30 - d / 2, d) : '') +
       `<text x="${x + 64}" y="${y + 28}" font-size="18" ${attributs}>${echappe(pseudo)}</text>` +
       `<text class="b" x="${x + 64}" y="${y + 47}" font-size="12.5" fill="${c.doux}">${echappe(tronque(sous, 12.5, l - 84))}</text>`
     );
@@ -408,7 +418,7 @@ export function rendre(
     const n = nom(p, 40, 254, 36, Boolean(o.nom));
     const depart = 146 + 60 + 14 + bio.h;
     const corps =
-      `<defs>${n.defs}</defs>` +
+      `<defs>${n.defs}${reserve(images)}</defs>` +
       cadre(l, h) +
       haut(l, hb) +
       medaillon(images, 100, hb + 6, 58, interieur, p.discord_status) +
@@ -431,7 +441,7 @@ export function rendre(
   const h = debut + 196;
   const n = nom(p, 24, 266, 32, Boolean(o.nom));
   const corps =
-    `<defs>${n.defs}</defs>` +
+    `<defs>${n.defs}${reserve(images)}</defs>` +
     cadre(l, h) +
     haut(l, hb) +
     medaillon(images, 78, hb + 10, 52, interieur, p.discord_status) +
