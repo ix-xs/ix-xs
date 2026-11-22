@@ -1,4 +1,4 @@
-import { c, echappe, habille, largeur, patte, type Police } from '../../scripts/trace.ts';
+import { c, echappe, habille, largeur, monogramme, relief, type Police } from '../../scripts/trace.ts';
 
 export type Statut = 'online' | 'idle' | 'dnd' | 'offline';
 
@@ -48,7 +48,6 @@ export interface Profil {
 
 export type Images = Record<string, string | undefined>;
 
-// l'avatar et la décoration servent deux fois : on les pose une fois dans <defs>, puis on les réutilise
 const pose = (nom: string, x: number, y: number, taille: number): string =>
   `<use href="#i-${nom}" transform="translate(${x} ${y}) scale(${taille})"/>`;
 
@@ -59,10 +58,10 @@ const reserve = (images: Images): string =>
     .join('');
 
 const verbes: Record<number, string> = { 0: 'playing', 1: 'streaming', 2: 'listening to', 3: 'watching', 5: 'competing in' };
-const statuts: Record<Statut, string> = { online: 'online', idle: 'idle', dnd: 'do not disturb', offline: 'offline' };
+const statuts: Record<Statut, string> = { online: 'online', idle: 'around', dnd: 'do not disturb', offline: 'offline' };
 const repos: Record<'la' | 'absent', string> = {
-  la: 'Nothing running. The cat has the keyboard.',
-  absent: 'Offline. The cat is guarding the keyboard.',
+  la: 'Nothing running right now.',
+  absent: 'Offline for now.',
 };
 
 const drapeaux: [number, string][] = [
@@ -80,7 +79,6 @@ const drapeaux: [number, string][] = [
   [4194304, '6bdc42827a38498929a4920da12695d9'],
 ];
 
-// identifiants de police du client Discord, relevés dans son JavaScript public
 export const polices: Record<number, string> = {
   1: 'bangers',
   2: 'biorhyme',
@@ -211,15 +209,19 @@ function nom(p: Presence, x: number, y: number, taille: number, police: boolean)
   };
 }
 
-function regard(statut: Statut, cx: number, cy: number, fond: string): string {
-  const oeil = (x: number): string => {
-    if (statut === 'online')
-      return `<g class="oeil"><ellipse cx="${x}" cy="${cy}" rx="3.6" ry="4.4" fill="${c.rose}"/><ellipse cx="${x}" cy="${cy}" rx="1" ry="3.4" fill="${c.encre}"/></g>`;
-    if (statut === 'idle')
-      return `<ellipse cx="${x}" cy="${cy}" rx="3.6" ry="4.4" fill="${c.rose}"/><ellipse cx="${x}" cy="${cy}" rx="1" ry="3.4" fill="${c.encre}"/><path d="M${x - 4.4} ${cy - 5}H${x + 4.4}V${cy - 0.3}Q${x} ${cy + 1.3} ${x - 4.4} ${cy - 0.3}Z" fill="${fond}"/><path d="M${x - 3.8} ${cy - 0.4}Q${x} ${cy + 1.2} ${x + 3.8} ${cy - 0.4}" stroke="${c.rose}" stroke-width="1.2" fill="none" stroke-linecap="round"/>`;
-    return `<path d="M${x - 3.6} ${cy - 0.6}Q${x} ${cy + 2.8} ${x + 3.6} ${cy - 0.6}" stroke="${statut === 'dnd' ? '#f28b82' : c.terne}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
-  };
-  return `<rect x="${cx - 17}" y="${cy - 10}" width="34" height="20" rx="10" fill="${fond}"/>` + oeil(cx - 6) + oeil(cx + 6);
+function signe(statut: Statut, cx: number, cy: number, fond: string): string {
+  const r = 8;
+  const socle = `<circle cx="${cx}" cy="${cy}" r="${r + 4}" fill="${fond}"/>`;
+  if (statut === 'online') return socle + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c.vert}"/>`;
+  if (statut === 'idle')
+    return (
+      socle +
+      `<mask id="lune"><rect x="${cx - r}" y="${cy - r}" width="${r * 2}" height="${r * 2}" fill="#fff"/><circle cx="${cx - r * 0.45}" cy="${cy - r * 0.45}" r="${r * 0.7}" fill="#000"/></mask>` +
+      `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c.rose}" mask="url(#lune)"/>`
+    );
+  if (statut === 'dnd')
+    return socle + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c.rose}"/><rect x="${cx - r * 0.55}" y="${cy - 1.6}" width="${r * 1.1}" height="3.2" rx="1.6" fill="${fond}"/>`;
+  return socle + `<circle cx="${cx}" cy="${cy}" r="${r - 2}" fill="none" stroke="${c.terne}" stroke-width="4"/>`;
 }
 
 function medaillon(images: Images, cx: number, cy: number, r: number, fond: string, statut: Statut): string {
@@ -231,7 +233,7 @@ function medaillon(images: Images, cx: number, cy: number, r: number, fond: stri
       ? `<g clip-path="url(#avatar)">${pose('avatar', cx - r, cy - r, r * 2)}</g>`
       : `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c.rose}"/>`) +
     (images['deco'] ? pose('deco', cx - d / 2, cy - d / 2, d) : '') +
-    regard(statut, cx + r * 0.72, cy + r * 0.78, fond)
+    signe(statut, cx + r * 0.72, cy + r * 0.72, fond)
   );
 }
 
@@ -282,7 +284,7 @@ function vignette(src: string | undefined, x: number, y: number, taille: number,
   const r = taille * 0.18;
   const fond = src
     ? `<clipPath id="vignette"><rect x="${x}" y="${y}" width="${taille}" height="${taille}" rx="${r}"/></clipPath><image href="${src}" x="${x}" y="${y}" width="${taille}" height="${taille}" clip-path="url(#vignette)" preserveAspectRatio="xMidYMid slice"/>`
-    : `<rect x="${x}" y="${y}" width="${taille}" height="${taille}" rx="${r}" fill="${c.papier}"/><g fill="${c.rose}">${patte(x + taille / 2, y + taille / 2 - 2, taille / 34, 0)}</g>`;
+    : `<rect x="${x}" y="${y}" width="${taille}" height="${taille}" rx="${r}" fill="${c.releve}"/>${monogramme(x + taille * 0.22, y + taille * 0.22, taille * 0.56)}`;
   if (!petite) return fond;
   const pr = taille * 0.17;
   const px = x + taille - pr * 0.6;
@@ -302,7 +304,7 @@ function activite(p: Presence, images: Images, x: number, y: number, l: number, 
     return (
       sortie +
       texte
-        .map((t, i) => `<text class="g" x="${x + 22}" y="${y + h / 2 + 6 + i * 26 - (texte.length - 1) * 13}" font-size="21" fill="${c.rose}">${echappe(t)}</text>`)
+        .map((t, i) => `<text class="b" x="${x + 22}" y="${y + h / 2 + 6 + i * 26 - (texte.length - 1) * 13}" font-size="17" fill="${c.doux}">${echappe(t)}</text>`)
         .join('')
     );
   }
@@ -313,7 +315,7 @@ function activite(p: Presence, images: Images, x: number, y: number, l: number, 
   const titre = spotify ? p.spotify!.song : a.name;
   const lignes = spotify ? [p.spotify!.artist, p.spotify!.album] : [a.details, a.state].filter((v): v is string => Boolean(v));
   sortie +=
-    `<text class="g" x="${x + 22}" y="${y + 30}" font-size="18" fill="${c.rose}">${verbes[a.type] ?? 'playing'}</text>` +
+    `<circle cx="${x + 25}" cy="${y + 26.4}" r="3" fill="${c.rose}"/><text class="m" x="${x + 34}" y="${y + 30}" font-size="11" fill="${c.terne}" letter-spacing=".08em">${(verbes[a.type] ?? 'playing').toUpperCase()}</text>` +
     vignette(images['grande'], x + 22, y + 44, taille, images['petite']) +
     `<text class="b" x="${tx}" y="${y + 62}" font-size="17" font-weight="700" fill="${c.texte}">${echappe(tronque(titre, 17, max, 700))}</text>` +
     lignes
@@ -353,10 +355,9 @@ function plateformes(p: Presence): string {
 }
 
 function banniere(l: number, h: number, couleurs: [string, string]): string {
-  const pas = Array.from({ length: Math.ceil(l / 70) }, (_, i) => patte(30 + i * 70, i % 2 ? h * 0.38 : h * 0.62, 1.3, 90)).join('');
   return (
-    `<linearGradient id="ban" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${couleurs[0]}"/><stop offset="1" stop-color="${c.papier}"/></linearGradient>` +
-    `<rect width="${l}" height="${h}" fill="url(#ban)"/><g fill="${c.encre}" opacity=".12">${pas}</g>`
+    `<linearGradient id="ban" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${couleurs[0]}" stop-opacity=".55"/><stop offset="1" stop-color="${c.fond}"/></linearGradient>` +
+    `<rect width="${l}" height="${h}" fill="${c.fond}"/><rect width="${l}" height="${h}" fill="url(#ban)"/>${relief(l, h, 6, 0.7)}`
   );
 }
 
@@ -372,13 +373,9 @@ export function rendre(
   const pseudo = u.global_name || u.username;
   const a = principale(p);
   const couleurs = theme(p, profil);
-  const interieur = '#141416';
+  const interieur = c.surface;
   const titre = `${pseudo} on Discord: ${statuts[p.discord_status]}${a ? `, ${verbes[a.type] ?? 'playing'} ${a.type === 2 && p.spotify ? p.spotify.song : a.name}` : ''}`;
-  const style =
-    (o.nom ? `@font-face{font-family:n;src:url(data:font/woff2;base64,${o.nom})}` : '') +
-    '.oeil{transform-box:fill-box;transform-origin:center;animation:cligne 5s infinite}' +
-    '@keyframes cligne{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}' +
-    '@media (prefers-reduced-motion:reduce){.oeil{animation:none}}';
+  const style = o.nom ? `@font-face{font-family:n;src:url(data:font/woff2;base64,${o.nom})}` : '';
   const cadre = (l: number, h: number): string =>
     `<linearGradient id="bord" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${couleurs[0]}"/><stop offset="1" stop-color="${couleurs[1]}"/></linearGradient>` +
     `<rect width="${l}" height="${h}" rx="24" fill="url(#bord)"/><rect x="3" y="3" width="${l - 6}" height="${h - 6}" rx="21" fill="${interieur}"/>` +
@@ -431,7 +428,7 @@ export function rendre(
       bio.dessin +
       activite(p, images, x0, depart, large, h - depart - 34, o.maintenant) +
       source(l, h);
-    return svg({ l, h, titre, polices: ['b', 'm', 'g'], style, corps });
+    return svg({ l, h, titre, polices: ['b', 'm'], style, corps });
   }
 
   const l = 412;
@@ -454,5 +451,5 @@ export function rendre(
     `<text class="m" x="26" y="${debut + 4}" font-size="12" fill="${c.terne}">${echappe(plateformes(p))}</text>` +
     activite(p, images, 18, debut + 18, l - 36, 150, o.maintenant) +
     source(l, h);
-  return svg({ l, h, titre, polices: ['b', 'm', 'g'], style, corps });
+  return svg({ l, h, titre, polices: ['b', 'm'], style, corps });
 }

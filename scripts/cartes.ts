@@ -1,6 +1,6 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { liens, outils, pile, profil } from '../profil.ts';
-import { c, cligne, coupe, echappe, icone, largeur, logo, patte, photo, rangee, svg, trait, yeux } from './dessin.ts';
+import { c, cadre, coupe, echappe, etiquette, icone, largeur, logo, monogramme, relief, reperes, svg, traceMonogramme } from './dessin.ts';
 
 type Outil = (typeof outils)[number];
 type Jour = { date: string; n: number };
@@ -9,6 +9,7 @@ const sortie = new URL('../dist/', import.meta.url);
 const jeton = process.env['GITHUB_TOKEN'] ?? process.env['GH_TOKEN'];
 const jour = new Date().toISOString().slice(0, 10);
 const nombre = new Intl.NumberFormat('en-US');
+const large = 880;
 const etroit = 412;
 
 async function lire<T>(url: string, init?: RequestInit): Promise<T | null> {
@@ -27,112 +28,106 @@ const github = (chemin: string): Promise<any> =>
   });
 
 async function calendrier(): Promise<Jour[] | null> {
-  if (!jeton) return null;
-  const requete = `query{user(login:"${profil.login}"){contributionsCollection{contributionCalendar{weeks{contributionDays{date contributionCount}}}}}}`;
-  const reponse = await lire<any>('https://api.github.com/graphql', {
-    method: 'POST',
-    headers: { authorization: `Bearer ${jeton}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ query: requete }),
-  });
+  const fichier = process.env['CALENDRIER'];
+  const reponse = fichier
+    ? JSON.parse(await readFile(fichier, 'utf8'))
+    : jeton
+      ? await lire<any>('https://api.github.com/graphql', {
+          method: 'POST',
+          headers: { authorization: `Bearer ${jeton}`, 'content-type': 'application/json' },
+          body: JSON.stringify({
+            query: `query{user(login:"${profil.login}"){contributionsCollection{contributionCalendar{weeks{contributionDays{date contributionCount}}}}}}`,
+          }),
+        })
+      : null;
   const semaines = reponse?.data?.user?.contributionsCollection?.contributionCalendar?.weeks;
   if (!Array.isArray(semaines)) return null;
   return semaines.flatMap((s: any) => s.contributionDays.map((d: any) => ({ date: d.date, n: d.contributionCount })));
 }
 
-const pasAnimes =
-  '.pas{opacity:0;animation:pas 7s infinite both}' +
-  '@keyframes pas{0%{opacity:0}3%{opacity:.95}45%{opacity:.4}62%,100%{opacity:0}}' +
-  '@media (prefers-reduced-motion:reduce){.pas{animation:none;opacity:.4}}';
+const surligne =
+  '.arrive{animation:arrive .6s cubic-bezier(.23,1,.32,1) backwards}' +
+  '@keyframes arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}' +
+  '@media (prefers-reduced-motion:reduce){.arrive{animation:none}}';
 
-function trace(n: number, x: number, y: number, ecart: number, taille: number, cadence: number): string {
-  return Array.from({ length: n }, (_, i) =>
-    patte(x + i * ecart, i % 2 ? y - 14 : y, taille, 90, `class="pas" style="animation-delay:${(i * cadence).toFixed(2)}s"`),
-  ).join('');
-}
-
-function medaillon(cx: number, cy: number, r: number): string {
-  return (
-    `<clipPath id="medaillon"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath>` +
-    `<circle cx="${cx}" cy="${cy}" r="${r + 7}" fill="${c.fond}"/>` +
-    `<g clip-path="url(#medaillon)"><rect x="${cx - r}" y="${cy - r}" width="${r}" height="${r * 2}" fill="${c.rose}"/><rect x="${cx}" y="${cy - r}" width="${r}" height="${r * 2}" fill="${c.surface}"/>` +
-    `<image href="${photo('avatar.png')}" x="${cx - r}" y="${cy - r * 0.9}" width="${r * 2}" height="${r * 2}"/></g>`
-  );
-}
-
-function phrase(x: number, y: number, lignes: string[], interligne: number): string {
-  let sortie = '';
+function titre(x: number, y: number, lignes: readonly string[], taille: number, interligne: number): string {
+  const attributs = `class="b" font-size="${taille}" font-weight="800" letter-spacing="-.02em"`;
+  let dessin =
+    `<filter id="surligne" x="-.07" y=".06" width="1.14" height=".92"><feFlood flood-color="${c.rose}"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
   lignes.forEach((ligne, i) => {
-    const ou = ligne.indexOf(profil.marque);
-    if (ou >= 0) sortie += trait(x + largeur(ligne.slice(0, ou), 21) - 6, y + i * interligne - 20, largeur(profil.marque, 21) + 14, 26);
+    const base = y + i * interligne;
+    const retard = `style="animation-delay:${(0.1 + i * 0.08).toFixed(2)}s"`;
+    const fin = ligne.endsWith('.') ? ligne.slice(0, -1) : ligne;
+    let morceaux: string;
+    if (fin === profil.marque) {
+      morceaux =
+        `<text ${attributs} x="${x + taille * 0.08}" y="${base}" fill="${c.encre}" filter="url(#surligne)">${echappe(fin)}</text>` +
+        (fin !== ligne
+          ? `<text ${attributs} x="${x + taille * 0.08}" y="${base}" fill="none"><tspan>${echappe(fin)}</tspan><tspan dx="${(taille * 0.14).toFixed(1)}" fill="${c.rose}">.</tspan></text>`
+          : '');
+    } else {
+      morceaux =
+        `<text ${attributs} x="${x}" y="${base}" fill="${c.texte}"><tspan>${echappe(fin)}</tspan>` +
+        (fin !== ligne ? `<tspan fill="${c.rose}">.</tspan>` : '') +
+        '</text>';
+    }
+    dessin += `<g class="arrive" ${retard}>${morceaux}</g>`;
   });
-  return (
-    sortie +
-    lignes.map((l, i) => `<text class="b" x="${x}" y="${y + i * interligne}" font-size="21" font-weight="500" fill="${c.doux}">${echappe(l)}</text>`).join('')
-  );
+  return dessin;
 }
 
 function entete(): string {
-  const l = 880;
-  const h = 290;
-  const bord = 622;
+  const l = large;
+  const h = 364;
+  const lignes = coupe(profil.accroche, 16, 470, 3);
   const corps =
-    `<clipPath id="cadre"><rect width="${l}" height="${h}" rx="22"/></clipPath><g clip-path="url(#cadre)">` +
-    `<rect width="${l}" height="${h}" fill="${c.fond}"/>` +
-    `<path d="M${bord} 0C${bord - 40} 80 ${bord + 38} 190 ${bord - 12} ${h}H${l}V0Z" fill="${c.papier}"/>` +
-    medaillon(bord + 128, 134, 96) +
-    `<text class="m" x="44" y="58" font-size="12.5" fill="${c.rose}" letter-spacing=".08em">00 · ${echappe(profil.role.toUpperCase())}</text>` +
-    `<text class="b" x="42" y="124" font-size="66" font-weight="800" fill="${c.texte}" letter-spacing="-.02em">${echappe(profil.nom)}</text>` +
-    phrase(44, 170, [profil.phrase], 0) +
-    `<text class="g" x="44" y="222" font-size="19" fill="${c.rose}">${echappe(profil.devise)}</text>` +
-    `<g fill="${c.rose}">${trace(13, 52, 266, 44, 1.1, 0.3)}</g>` +
-    `</g>`;
-  return svg({ l, h, titre: `${profil.nom}: ${profil.phrase}`, polices: ['b', 'm', 'g'], style: pasAnimes, corps });
+    `<clipPath id="cadre"><rect width="${l}" height="${h}" rx="24"/></clipPath>` +
+    cadre(l, h, 24, c.fond) +
+    `<g clip-path="url(#cadre)">${relief(l, h, 11, 1.3)}</g>` +
+    monogramme(l - 280, 64, 220, { classe: 'trace' }) +
+    `<g class="arrive">${etiquette(44, 58, `${profil.nom} · ${profil.role}`)}</g>` +
+    titre(42, 118, profil.titre, 46, 52) +
+    lignes.map((t, i) => `<text class="b arrive" style="animation-delay:.3s" x="44" y="${270 + i * 24}" font-size="16" fill="${c.doux}">${echappe(t)}</text>`).join('') +
+    `<text class="m arrive" style="animation-delay:.4s" x="44" y="${h - 32}" font-size="11" fill="${c.terne}" letter-spacing=".08em">${echappe(profil.lieu.toUpperCase())}</text>`;
+  return svg({ l, h, titre: `${profil.nom}, ${profil.role}: ${profil.titre.join(' ')}`, polices: ['b', 'm'], style: traceMonogramme + surligne, corps });
 }
 
 function enteteEtroit(): string {
   const l = etroit;
-  const h = 312;
+  const lignes = coupe(profil.accroche, 15, l - 52, 5);
+  const h = 270 + lignes.length * 22 + 50;
   const corps =
-    `<clipPath id="cadre"><rect width="${l}" height="${h}" rx="20"/></clipPath><g clip-path="url(#cadre)">` +
-    `<rect width="${l}" height="${h}" fill="${c.fond}"/>` +
-    `<path d="M${l - 150} 0C${l - 160} 70 ${l - 90} 150 ${l} 158V0Z" fill="${c.papier}"/>` +
-    medaillon(l - 70, 72, 50) +
-    `<text class="m" x="26" y="40" font-size="11.5" fill="${c.rose}" letter-spacing=".08em">00 · ${echappe(profil.role.toUpperCase())}</text>` +
-    `<text class="b" x="24" y="104" font-size="58" font-weight="800" fill="${c.texte}" letter-spacing="-.02em">${echappe(profil.nom)}</text>` +
-    phrase(26, 158, profil.phrase.split(/(?<=,) /), 28) +
-    profil.devise
-      .split(/(?<=[.]) /)
-      .map((t, i) => `<text class="g" x="26" y="${232 + i * 23}" font-size="18" fill="${c.rose}">${echappe(t)}</text>`)
-      .join('') +
-    `<g fill="${c.rose}">${trace(8, 34, 296, 40, 1, 0.4)}</g>` +
-    `</g>`;
-  return svg({ l, h, titre: `${profil.nom}: ${profil.phrase}`, polices: ['b', 'm', 'g'], style: pasAnimes, corps });
+    `<clipPath id="cadre"><rect width="${l}" height="${h}" rx="22"/></clipPath>` +
+    cadre(l, h, 22, c.fond) +
+    `<g clip-path="url(#cadre)">${relief(l, h, 9, 2.1)}</g>` +
+    monogramme(l - 108, 22, 84, { classe: 'trace' }) +
+    `<g class="arrive">${etiquette(26, 44, profil.role)}</g>` +
+    titre(24, 144, profil.titre, 34, 40) +
+    lignes.map((t, i) => `<text class="b arrive" style="animation-delay:.3s" x="26" y="${270 + i * 22}" font-size="15" fill="${c.doux}">${echappe(t)}</text>`).join('') +
+    `<text class="m arrive" style="animation-delay:.4s" x="26" y="${h - 26}" font-size="10.5" fill="${c.terne}" letter-spacing=".08em">${echappe(profil.lieu.toUpperCase())}</text>`;
+  return svg({ l, h, titre: `${profil.nom}, ${profil.role}: ${profil.titre.join(' ')}`, polices: ['b', 'm'], style: traceMonogramme + surligne, corps });
 }
 
 function pictogramme(cle: string, cx: number, cy: number, taille: number): string {
   const x = cx - taille / 2;
   const y = cy - taille / 2;
-  if (cle === 'site')
-    return `<path transform="translate(${x} ${y}) scale(${taille / 48})" fill="${c.encre}" d="M24 11H28.3Q30.5 11 32.2 9.6L40.15 3.03Q42 1.5 42.6 3.82L44.5 11.07Q45 13 45 15V36A10 10 0 0 1 35 46H13A10 10 0 0 1 3 36V15Q3 13 3.5 11.07L5.4 3.82Q6 1.5 7.85 3.03L15.8 9.6Q17.5 11 19.7 11Z"/>`;
+  if (cle === 'site') return monogramme(x - taille * 0.08, y - taille * 0.08, taille * 1.16);
   if (cle === 'mail')
     return (
-      `<g transform="translate(${x} ${y}) scale(${taille / 24})"><path fill="${c.encre}" d="M2 6.5A2 2 0 0 1 4 4.5h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z"/>` +
-      `<path d="M3.5 7l8.5 6.2L20.5 7" fill="none" stroke="${c.rose}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>`
+      `<g transform="translate(${x} ${y}) scale(${taille / 24})" fill="none" stroke="${c.texte}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">` +
+      `<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.2 8.5-6.2"/></g>`
     );
-  return icone(cle, x, y, taille, c.encre);
+  return icone(cle, x, y, taille, c.texte);
 }
 
 function lien(cle: string, valeur: string): string {
-  const taille = 12;
-  const h = 28;
-  const lc = 38;
-  const lv = largeur(valeur, taille, 'm') + 26;
-  const l = lc + lv;
+  const taille = 12.5;
+  const h = 36;
+  const l = 44 + largeur(valeur, taille, 'm') + 18;
   const corps =
-    `<rect width="${l}" height="${h}" rx="14" fill="${c.surface}"/>` +
-    `<path d="M14 0H${lc + 3}C${lc - 4} 10 ${lc + 6} 18 ${lc - 2} ${h}H14A14 14 0 0 1 14 0Z" fill="${c.rose}"/>` +
-    pictogramme(cle, 19, h / 2, 14) +
-    `<text class="m" x="${lc + 12}" y="18.2" font-size="${taille}" fill="${c.texte}">${echappe(valeur)}</text>`;
+    `<rect x=".5" y=".5" width="${l - 1}" height="${h - 1}" rx="${h / 2}" fill="${c.surface}" stroke="${c.ligne}" stroke-opacity=".12"/>` +
+    pictogramme(cle, 24, h / 2, 16) +
+    `<text class="m" x="42" y="22.5" font-size="${taille}" fill="${c.texte}">${echappe(valeur)}</text>`;
   return svg({ l, h, titre: `${cle}: ${valeur}`, polices: ['m'], corps });
 }
 
@@ -167,10 +162,10 @@ async function releve(depot: string, paquet: string): Promise<Releve> {
   };
 }
 
-function badges(r: Releve): [string, string][] {
+function chiffres(r: Releve): [string, string][] {
   const paires: [string, string][] = [];
-  if (r.version) paires.push(['npm', `v${r.version}`]);
-  if (r.telechargements !== undefined) paires.push(['30 days', `${nombre.format(r.telechargements)} dl`]);
+  if (r.version) paires.push(['version', `v${r.version}`]);
+  if (r.telechargements !== undefined) paires.push(['30 days', nombre.format(r.telechargements)]);
   if (r.etoiles) paires.push(['stars', nombre.format(r.etoiles)]);
   if (r.licence) paires.push(['license', r.licence]);
   return paires;
@@ -200,88 +195,78 @@ function courbe(serie: number[] | undefined, x: number, y: number, l: number, h:
   }
   const [xf, yf] = points[points.length - 1];
   return (
-    `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.rose}" stop-opacity=".32"/><stop offset="1" stop-color="${c.rose}" stop-opacity="0"/></linearGradient>` +
+    `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.rose}" stop-opacity=".22"/><stop offset="1" stop-color="${c.rose}" stop-opacity="0"/></linearGradient>` +
+    `<path d="M${x} ${y + h}H${x + l}" stroke="${c.ligne}" stroke-opacity=".08"/>` +
     `<path d="${ligne}L${x + l} ${y + h}L${x} ${y + h}Z" fill="url(#${id})"/>` +
-    `<path d="${ligne}" fill="none" stroke="${c.rose}" stroke-width="1.6" stroke-linejoin="round"/>` +
-    `<circle cx="${xf}" cy="${yf}" r="3" fill="${c.rose}"/>`
+    `<path class="trait-courbe" pathLength="1" d="${ligne}" fill="none" stroke="${c.rose}" stroke-width="1.5" stroke-linejoin="round"/>` +
+    `<circle cx="${xf}" cy="${yf}" r="3.2" fill="${c.rose}"/>`
   );
 }
+
+const traceCourbe =
+  '.trait-courbe{stroke-dasharray:1;animation:courbe 1.4s cubic-bezier(.23,1,.32,1) .2s backwards}' +
+  '@keyframes courbe{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}' +
+  '@media (prefers-reduced-motion:reduce){.trait-courbe{animation:none}}';
 
 const source = (x: number, y: number, r: Releve, ancre = 'start'): string =>
   `<text class="m" x="${x}" y="${y}" font-size="10" fill="${c.terne}" text-anchor="${ancre}">${echappe([histoire(r), `read ${jour}`].filter(Boolean).join(' · '))}</text>`;
 
-function carte(outil: Outil, r: Releve, note?: string): string {
+function carte(outil: Outil, r: Releve, enTete?: string): string {
   const l = etroit;
-  const h = 282;
-  const haut = 82;
-  const lignes = coupe(outil.ligne, 15, l - 44, 2);
+  const h = 300;
+  const lignes = coupe(outil.ligne, 15, l - 48, 2);
   const corps =
-    `<clipPath id="cadre"><rect width="${l}" height="${h}" rx="18"/></clipPath><g clip-path="url(#cadre)">` +
-    `<rect width="${l}" height="${h}" fill="${c.surface}"/>` +
-    `<path d="M0 0H${l}V${haut - 6}C${l * 0.7} ${haut + 10} ${l * 0.35} ${haut - 14} 0 ${haut + 4}Z" fill="${c.papier}"/>` +
-    logo(`logos/${outil.depot}.svg`, 22, 18, 44) +
-    `<text class="b" x="80" y="42" font-size="22" font-weight="700" fill="${c.texte}">${echappe(outil.depot)}</text>` +
-    `<text class="m" x="80" y="61" font-size="11.5" fill="${c.papierDoux}">${echappe(outil.npm)}</text>` +
-    (note ? `<text class="g" x="${l - 22}" y="64" font-size="17" fill="${c.rose}" text-anchor="end">${echappe(note)}</text>` : '') +
-    yeux(l - 34, 30) +
-    lignes.map((t, i) => `<text class="b" x="22" y="${120 + i * 21}" font-size="15" fill="${c.doux}">${echappe(t)}</text>`).join('') +
-    courbe(r.serie, 22, 162, l - 44, 34, `courbe-${outil.depot.replace(/\W/g, '')}`) +
-    rangee(22, 210, badges(r), 11) +
-    source(22, h - 18, r) +
-    `</g>`;
-  return svg({ l, h, titre: `${outil.depot}: ${outil.ligne}`, polices: note ? ['b', 'm', 'g'] : ['b', 'm'], style: cligne, corps });
+    cadre(l, h, 20) +
+    logo(`logos/${outil.depot}.svg`, 24, 24, 44) +
+    `<text class="b" x="82" y="44" font-size="21" font-weight="700" fill="${c.texte}">${echappe(outil.depot)}</text>` +
+    `<text class="m" x="82" y="63" font-size="11.5" fill="${c.terne}">${echappe(outil.npm)}</text>` +
+    (enTete ? etiquette(l - 24 - largeur(enTete, 11, 'm') * 1.08 - 12, 30, enTete) : '') +
+    `<path d="M24 88H${l - 24}" stroke="${c.ligne}" stroke-opacity=".08"/>` +
+    lignes.map((t, i) => `<text class="b" x="24" y="${118 + i * 21}" font-size="15" fill="${c.doux}">${echappe(t)}</text>`).join('') +
+    courbe(r.serie, 24, 160, l - 48, 36, `courbe-${outil.depot.replace(/\W/g, '')}`) +
+    reperes(24, 214, chiffres(r), { taille: 15, ecart: 14 }) +
+    source(24, h - 20, r);
+  return svg({ l, h, titre: `${outil.depot}: ${outil.ligne}`, polices: ['b', 'm'], style: traceCourbe, corps });
 }
 
 function une(outil: Outil, r: Releve): string {
-  const l = 880;
-  const h = 258;
+  const l = large;
+  const h = 260;
   const bord = 300;
-  const x0 = bord + 44;
-  const lignes = coupe(outil.ligne, 19, l - x0 - 30, 2);
+  const x0 = bord + 40;
+  const lignes = coupe(outil.ligne, 19, l - x0 - 36, 2);
   const corps =
-    `<clipPath id="cadre"><rect width="${l}" height="${h}" rx="22"/></clipPath><g clip-path="url(#cadre)">` +
-    `<rect width="${l}" height="${h}" fill="${c.surface}"/>` +
-    `<path d="M0 0H${bord}C${bord - 34} 70 ${bord + 30} 170 ${bord - 10} ${h}H0Z" fill="${c.papier}"/>` +
-    logo(`logos/${outil.depot}.svg`, 32, 32, 64) +
-    `<text class="b" x="32" y="146" font-size="32" font-weight="800" fill="${c.texte}" letter-spacing="-.01em">${echappe(outil.depot)}</text>` +
-    `<text class="m" x="33" y="172" font-size="12.5" fill="${c.papierDoux}">${echappe(outil.npm)}</text>` +
-    `<text class="g" x="${x0}" y="46" font-size="19" fill="${c.rose}">start here</text>` +
-    yeux(l - 40, 38) +
-    lignes.map((t, i) => `<text class="b" x="${x0}" y="${82 + i * 26}" font-size="19" fill="${c.doux}">${echappe(t)}</text>`).join('') +
-    courbe(r.serie, x0, 132, l - x0 - 34, 36, 'courbe-une') +
-    rangee(x0, 184, badges(r), 12) +
-    source(l - 34, h - 20, r, 'end') +
-    `</g>`;
-  return svg({ l, h, titre: `${outil.depot}: ${outil.ligne}`, polices: ['b', 'm', 'g'], style: cligne, corps });
+    cadre(l, h, 24) +
+    `<path d="M${bord} 28V${h - 28}" stroke="${c.ligne}" stroke-opacity=".08"/>` +
+    logo(`logos/${outil.depot}.svg`, 36, 36, 64) +
+    `<text class="b" x="36" y="146" font-size="32" font-weight="800" fill="${c.texte}" letter-spacing="-.01em">${echappe(outil.depot)}</text>` +
+    `<text class="m" x="37" y="172" font-size="12.5" fill="${c.terne}">${echappe(outil.npm)}</text>` +
+    etiquette(37, h - 36, 'start here') +
+    lignes.map((t, i) => `<text class="b" x="${x0}" y="${66 + i * 26}" font-size="19" fill="${c.doux}">${echappe(t)}</text>`).join('') +
+    courbe(r.serie, x0, 116, l - x0 - 36, 40, 'courbe-une') +
+    reperes(x0, 176, chiffres(r), { taille: 18, ecart: 22 }) +
+    source(l - 36, h - 22, r, 'end');
+  return svg({ l, h, titre: `${outil.depot}: ${outil.ligne}`, polices: ['b', 'm'], style: traceCourbe, corps });
 }
 
-const etiquettes: Record<string, string> = {
-  speak: 'I speak',
-  run: 'it runs on',
-  build: 'I build with',
-  'talk to': 'it talks to',
-  check: 'checked by',
-  ship: 'shipped with',
-};
-
 function stack(colonnes: 1 | 2): string {
-  const l = colonnes === 2 ? 880 : etroit;
-  const rangeeH = 104;
+  const l = colonnes === 2 ? large : etroit;
+  const rangeeH = 108;
   const pasX = colonnes === 2 ? 98 : 92;
-  const h = Math.ceil(pile.length / colonnes) * rangeeH + 22;
-  let corps = `<rect width="${l}" height="${h}" rx="22" fill="${c.surface}"/>`;
+  const h = Math.ceil(pile.length / colonnes) * rangeeH + 26;
+  let corps = cadre(l, h, 22);
   pile.forEach((famille, i) => {
-    const x0 = colonnes === 2 && i % 2 ? 462 : colonnes === 2 ? 34 : 26;
-    const y0 = 24 + Math.floor(i / colonnes) * rangeeH;
-    corps += `<text class="g" x="${x0}" y="${y0 + 18}" font-size="19" fill="${c.rose}">${echappe(etiquettes[famille.famille] ?? famille.famille)}</text>`;
+    const x0 = colonnes === 2 && i % 2 ? 470 : colonnes === 2 ? 36 : 26;
+    const y0 = 28 + Math.floor(i / colonnes) * rangeeH;
+    corps += etiquette(x0, y0 + 12, famille.famille);
     famille.outils.forEach(([nom, libelle], j) => {
       const cx = x0 + 22 + j * pasX;
-      corps += icone(nom, cx - 14, y0 + 32, 28, c.doux);
+      corps += icone(nom, cx - 14, y0 + 30, 28, c.doux);
       corps += `<text class="m" x="${cx}" y="${y0 + 80}" font-size="11" fill="${c.terne}" text-anchor="middle">${echappe(libelle)}</text>`;
     });
   });
-  if (colonnes === 2) corps += `<path d="M440 26V${h - 26}" stroke="${c.texte}" stroke-opacity=".07" stroke-dasharray="2 6" stroke-linecap="round"/>`;
-  return svg({ l, h, titre: 'Stack', polices: ['m', 'g'], corps });
+  if (colonnes === 2) corps += `<path d="M${l / 2} 28V${h - 28}" stroke="${c.ligne}" stroke-opacity=".08"/>`;
+  return svg({ l, h, titre: 'Stack', polices: ['m'], corps });
 }
 
 function series(jours: Jour[]): { total: number; plusLongue: number; enCours: number } {
@@ -301,26 +286,26 @@ function series(jours: Jour[]): { total: number; plusLongue: number; enCours: nu
 }
 
 function activite(annee: Jour[], semainesMax: number): string {
-  const large = semainesMax > 30;
-  const l = large ? 880 : etroit;
+  const ample = semainesMax > 30;
+  const l = ample ? large : etroit;
   const cote = 12;
   const ecart = 3.2;
-  const x0 = large ? 46 : 42;
-  const y0 = 46;
+  const x0 = ample ? 48 : 44;
+  const y0 = 50;
   const dernier = new Date(`${annee.at(-1)?.date}T00:00:00Z`).getUTCDay();
   const jours = annee.slice(-Math.min(annee.length, (semainesMax - 1) * 7 + dernier + 1));
   const decalage = new Date(`${jours[0]?.date}T00:00:00Z`).getUTCDay();
   const semaines = Math.ceil((jours.length + decalage) / 7);
   const grille = y0 + 7 * (cote + ecart);
-  const h = grille + (large ? 64 : 92);
+  const h = grille + 82;
   const actifs = annee.map((j) => j.n).filter((n) => n > 0).sort((a, b) => a - b);
   const seuils = [0.25, 0.5, 0.75].map((q) => actifs[Math.floor(q * (actifs.length - 1))] ?? 1);
-  const teintes = [c.vide, '#4a3437', '#7d5459', '#c0858c', c.rose];
+  const teintes = [c.vide, '#3a2b2e', '#6a464c', '#b27a82', c.rose];
   const niveau = (n: number): number => (n === 0 ? 0 : 1 + seuils.filter((v) => n > v).length);
   const { total, plusLongue, enCours } = series(annee);
-  const mois = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const noms = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   let cases = '';
-  let reperes = '';
+  let repere = '';
   let dernierMois = -1;
   jours.forEach((j, i) => {
     const k = i + decalage;
@@ -331,40 +316,42 @@ function activite(annee: Jour[], semainesMax: number): string {
     const m = new Date(`${j.date}T00:00:00Z`).getUTCMonth();
     if (d === 0 && m !== dernierMois) {
       dernierMois = m;
-      if (s > 0 && s < semaines - 1) reperes += `<text class="m" x="${x}" y="${y0 - 12}" font-size="10.5" fill="${c.terne}">${mois[m]}</text>`;
+      if (s > 0 && s < semaines - 1) repere += `<text class="m" x="${x}" y="${y0 - 12}" font-size="10.5" fill="${c.terne}">${noms[m]}</text>`;
     }
-    if (i === jours.length - 1) cases += `<g class="ici" fill="${c.rose}">${patte(x + cote / 2, y + cote / 2 - 0.5, 0.95, 0)}</g>`;
-    else cases += `<rect x="${x}" y="${y}" width="${cote}" height="${cote}" rx="3.2" fill="${teintes[niveau(j.n)]}"><title>${j.date}: ${j.n}</title></rect>`;
+    if (i === jours.length - 1) cases += `<circle class="ici" cx="${x + cote / 2}" cy="${y + cote / 2}" r="${cote / 2.4}" fill="${c.rose}"><title>${j.date}: ${j.n}</title></circle>`;
+    else cases += `<rect x="${x}" y="${y}" width="${cote}" height="${cote}" rx="3" fill="${teintes[niveau(j.n)]}"><title>${j.date}: ${j.n}</title></rect>`;
   });
   const lignes = ['', 'Mon', '', 'Wed', '', 'Fri', '']
     .map((t, d) => (t ? `<text class="m" x="${x0 - 10}" y="${y0 + d * (cote + ecart) + 9.5}" font-size="10" fill="${c.terne}" text-anchor="end">${t}</text>` : ''))
     .join('');
-  const fort = (v: number | string): string => `<tspan font-weight="700" fill="${c.texte}">${v}</tspan>`;
-  const point = `<tspan fill="${c.terne}">  ·  </tspan>`;
-  const pied = grille + 34;
-  const textes = large
-    ? `<text class="b" x="${x0}" y="${pied}" font-size="15" fill="${c.doux}">${fort(nombre.format(total))} contributions in the last year${point}longest streak ${fort(plusLongue)} days${point}current streak ${fort(enCours)} days</text>`
-    : `<text class="b" x="${x0 - 16}" y="${pied}" font-size="15" fill="${c.doux}">${fort(nombre.format(total))} contributions in the last year</text>` +
-      `<text class="b" x="${x0 - 16}" y="${pied + 24}" font-size="15" fill="${c.doux}">longest streak ${fort(plusLongue)} days${point}current ${fort(enCours)}</text>`;
-  const legende = large
-    ? `<text class="m" x="${l - 128}" y="${pied}" font-size="10" fill="${c.terne}" text-anchor="end">less</text>` +
-      teintes.map((t, i) => `<rect x="${l - 120 + i * 15}" y="${pied - 10}" width="${cote}" height="${cote}" rx="3.2" fill="${t}"/>`).join('') +
-      `<text class="m" x="${l - 40}" y="${pied}" font-size="10" fill="${c.terne}">more</text>`
+  const paires: [string, string][] = [
+    ['last year', `${nombre.format(total)} contributions`],
+    ['longest streak', `${plusLongue} days`],
+    ['current streak', `${enCours} days`],
+  ];
+  const pied = reperes(x0 - 4, grille + 22, ample ? paires : paires.slice(0, 2), { taille: ample ? 17 : 15, ecart: ample ? 24 : 16 });
+  const legende = ample
+    ? `<text class="m" x="${l - 130}" y="${grille + 52}" font-size="10" fill="${c.terne}" text-anchor="end">less</text>` +
+      teintes.map((t, i) => `<rect x="${l - 122 + i * 15}" y="${grille + 42}" width="${cote}" height="${cote}" rx="3" fill="${t}"/>`).join('') +
+      `<text class="m" x="${l - 42}" y="${grille + 52}" font-size="10" fill="${c.terne}">more</text>`
     : '';
   const style =
     '.ici{transform-box:fill-box;transform-origin:center;animation:ici 2.4s ease-in-out infinite}' +
-    '@keyframes ici{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}' +
+    '@keyframes ici{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}' +
     '@media (prefers-reduced-motion:reduce){.ici{animation:none}}';
-  const corps = `<rect width="${l}" height="${h}" rx="22" fill="${c.surface}"/>` + reperes + lignes + cases + textes + legende;
+  const corps = cadre(l, h, 22) + repere + lignes + cases + pied + legende;
   return svg({ l, h, titre: `${total} contributions in the last year`, polices: ['b', 'm'], style, corps });
 }
 
-function sentier(): string {
-  const style =
-    '.pas{opacity:0;animation:pas 8s infinite both}' +
-    '@keyframes pas{0%{opacity:0}3%{opacity:.7}50%{opacity:.25}70%,100%{opacity:0}}' +
-    '@media (prefers-reduced-motion:reduce){.pas{animation:none;opacity:.3}}';
-  return svg({ l: 880, h: 44, titre: 'A cat walked by', polices: [], style, corps: `<g fill="${c.rose}">${trace(19, 28, 28, 46, 0.95, 0.26)}</g>` });
+function signature(): string {
+  const l = large;
+  const h = 48;
+  const corps =
+    `<linearGradient id="filet-g" x1="0" x2="1"><stop offset="0" stop-color="${c.ligne}" stop-opacity="0"/><stop offset="1" stop-color="${c.ligne}" stop-opacity=".3"/></linearGradient>` +
+    `<linearGradient id="filet-d" x1="0" x2="1"><stop offset="0" stop-color="${c.ligne}" stop-opacity=".3"/><stop offset="1" stop-color="${c.ligne}" stop-opacity="0"/></linearGradient>` +
+    `<path d="M40 24H${l / 2 - 30}" stroke="url(#filet-g)"/><path d="M${l / 2 + 30} 24H${l - 40}" stroke="url(#filet-d)"/>` +
+    monogramme(l / 2 - 13, 11, 26, { classe: 'trace' });
+  return svg({ l, h, titre: 'ix-xs', polices: [], style: traceMonogramme, corps });
 }
 
 await mkdir(sortie, { recursive: true });
@@ -372,7 +359,7 @@ const ecrire = (nom: string, contenu: string): Promise<void> => writeFile(new UR
 
 await ecrire('entete.svg', entete());
 await ecrire('entete-mobile.svg', enteteEtroit());
-await ecrire('sentier.svg', sentier());
+await ecrire('signature.svg', signature());
 await ecrire('stack.svg', stack(2));
 await ecrire('stack-mobile.svg', stack(1));
 for (const l of liens) await ecrire(`${l.fichier}.svg`, lien(l.cle, l.valeur));
@@ -383,7 +370,7 @@ for (const outil of outils) {
     await ecrire(`outil-${outil.depot}.svg`, une(outil, r));
     await ecrire(`outil-${outil.depot}-mobile.svg`, carte(outil, r, 'start here'));
   } else await ecrire(`outil-${outil.depot}.svg`, carte(outil, r));
-  console.log(outil.depot, r);
+  console.log(outil.depot, r.version ?? '?');
 }
 
 const annee = await calendrier();

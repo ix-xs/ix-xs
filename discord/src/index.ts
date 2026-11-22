@@ -4,7 +4,6 @@ import type { Police } from '../../scripts/trace.ts';
 const fichiers: Record<Police, string> = {
   b: 'bricolage-grotesque-latin.woff2',
   m: 'fragment-mono-latin.woff2',
-  g: 'gochi-hand-latin.woff2',
 };
 
 interface Env {
@@ -52,7 +51,6 @@ export async function images(p: Presence, profil: Profil, anime: boolean): Promi
   return Object.fromEntries(liste.map(([cle], i) => [cle, resolues[i]]));
 }
 
-// les polices du site vivent dans le dépôt du profil, à côté des cartes
 export async function policesSite(): Promise<Record<Police, string>> {
   const entrees = await Promise.all(
     (Object.keys(fichiers) as Police[]).map(async (cle) => {
@@ -86,7 +84,6 @@ export async function policeNom(p: Presence): Promise<string | undefined> {
 
 let dernier: { quand: number; profil: Profil } | undefined;
 
-// Discord ne donne les badges, pronoms et couleurs de profil qu'à un compte utilisateur : dstn.to les relaie publiquement
 export async function profil(env: Env): Promise<Profil> {
   if (env.PROFIL_PUBLIC === 'non') return {};
   if (dernier && Date.now() - dernier.quand < 10 * 60000) return dernier.profil;

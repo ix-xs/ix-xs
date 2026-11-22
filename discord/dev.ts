@@ -43,7 +43,7 @@ const demos: Record<string, { statut: Statut; presence: Partial<Presence>; grand
       activities: [{ type: 0, name: 'Visual Studio Code', details: 'Editing carte.ts', state: 'Workspace: ix-xs.dev', timestamps: { start: maintenant - 23 * 60000 } }],
     },
     grande: logo('logos/djs-bot.svg'),
-    petite: logo('logo.svg'),
+    petite: logo('monogramme.svg'),
   },
   musique: {
     statut: 'online',
@@ -51,7 +51,7 @@ const demos: Record<string, { statut: Statut; presence: Partial<Presence>; grand
       activities: [...humeur, { type: 2, name: 'Spotify' }],
       spotify: { song: 'A song with a fairly long title, for the test', artist: 'Some artist', album: 'Some album', timestamps: { start: maintenant - 95000, end: maintenant + 130000 } },
     },
-    grande: logo('logo.svg'),
+    grande: logo('monogramme.svg'),
   },
   absent: { statut: 'offline', presence: { activities: [] } },
 };

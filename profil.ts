@@ -1,17 +1,18 @@
 export const profil = {
   login: 'ix-xs',
   nom: 'ix-xs',
-  phrase: 'I build websites, Discord bots and tools.',
-  marque: 'websites',
   role: 'independent developer',
-  devise: "A perfectly normal GitHub profile. At least, that's what we tell the cat.",
+  lieu: 'Var, France · remote',
+  titre: ['Custom websites,', 'built to be', 'found.'],
+  marque: 'found',
+  accroche: 'I design your site, put it online and get it found on Google. One person, from the first idea to the follow-up.',
 };
 
 export const liens = [
   { cle: 'site', valeur: 'ix-xs.dev', url: 'https://ix-xs.dev', fichier: 'lien-site' },
-  { cle: 'npm', valeur: '~ix-xs.dev', url: 'https://www.npmjs.com/~ix-xs.dev', fichier: 'lien-npm' },
   { cle: 'discord', valeur: 'ix_xs', url: 'https://discord.com/users/782307250751406091', fichier: 'lien-discord' },
   { cle: 'mail', valeur: 'contact@ix-xs.dev', url: 'mailto:contact@ix-xs.dev', fichier: 'lien-mail' },
+  { cle: 'npm', valeur: '~ix-xs.dev', url: 'https://www.npmjs.com/~ix-xs.dev', fichier: 'lien-npm' },
 ] as const;
 
 export const outils = [
@@ -23,10 +24,10 @@ export const outils = [
 ] as const;
 
 export const pile = [
-  { famille: 'speak', outils: [['typescript', 'TypeScript'], ['javascript', 'JavaScript'], ['html5', 'HTML'], ['css', 'CSS']] },
-  { famille: 'run', outils: [['nodedotjs', 'Node.js'], ['bun', 'Bun'], ['deno', 'Deno']] },
-  { famille: 'build', outils: [['astro', 'Astro'], ['threedotjs', 'Three.js'], ['ejs', 'EJS'], ['electron', 'Electron']] },
-  { famille: 'talk to', outils: [['discorddotjs', 'discord.js'], ['twitch', 'Twitch'], ['youtube', 'YouTube'], ['sqlite', 'SQLite']] },
-  { famille: 'check', outils: [['vitest', 'Vitest'], ['eslint', 'ESLint'], ['prettier', 'Prettier'], ['githubactions', 'Actions']] },
-  { famille: 'ship', outils: [['cloudflare', 'Cloudflare'], ['npm', 'npm'], ['umami', 'Umami'], ['git', 'Git']] },
+  { famille: 'I speak', outils: [['typescript', 'TypeScript'], ['javascript', 'JavaScript'], ['html5', 'HTML'], ['css', 'CSS']] },
+  { famille: 'It runs on', outils: [['nodedotjs', 'Node.js'], ['bun', 'Bun'], ['deno', 'Deno']] },
+  { famille: 'I build with', outils: [['astro', 'Astro'], ['threedotjs', 'Three.js'], ['ejs', 'EJS'], ['electron', 'Electron']] },
+  { famille: 'It talks to', outils: [['discorddotjs', 'discord.js'], ['twitch', 'Twitch'], ['youtube', 'YouTube'], ['sqlite', 'SQLite']] },
+  { famille: 'Checked by', outils: [['vitest', 'Vitest'], ['eslint', 'ESLint'], ['prettier', 'Prettier'], ['githubactions', 'Actions']] },
+  { famille: 'Shipped with', outils: [['cloudflare', 'Cloudflare'], ['npm', 'npm'], ['umami', 'Umami'], ['git', 'Git']] },
 ] as const;

@@ -1,17 +1,17 @@
-<a href="https://ix-xs.dev"><picture><source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/ix-xs/ix-xs/output/entete-mobile.svg"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/entete.svg" width="100%" alt="ix-xs, independent developer: I build websites, Discord bots and tools."></picture></a>
+<a href="https://ix-xs.dev"><picture><source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/ix-xs/ix-xs/output/entete-mobile.svg"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/entete.svg" width="100%" alt="ix-xs, independent developer. Custom websites, built to be found."></picture></a>
 
 <br>
 
 <p>
-  <a href="https://ix-xs.dev"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/lien-site.svg" height="28" alt="site: ix-xs.dev"></a>&nbsp;&nbsp;
-  <a href="https://www.npmjs.com/~ix-xs.dev"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/lien-npm.svg" height="28" alt="npm: ~ix-xs.dev"></a>&nbsp;&nbsp;
-  <a href="https://discord.com/users/782307250751406091"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/lien-discord.svg" height="28" alt="discord: ix_xs"></a>&nbsp;&nbsp;
-  <a href="mailto:contact@ix-xs.dev"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/lien-mail.svg" height="28" alt="mail: contact@ix-xs.dev"></a>
+  <a href="https://ix-xs.dev"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/lien-site.svg" height="36" alt="site: ix-xs.dev"></a>&nbsp;
+  <a href="https://discord.com/users/782307250751406091"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/lien-discord.svg" height="36" alt="discord: ix_xs"></a>&nbsp;
+  <a href="mailto:contact@ix-xs.dev"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/lien-mail.svg" height="36" alt="mail: contact@ix-xs.dev"></a>&nbsp;
+  <a href="https://www.npmjs.com/~ix-xs.dev"><img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/lien-npm.svg" height="36" alt="npm: ~ix-xs.dev"></a>
 </p>
 
 <br>
 
-I make websites for small businesses, Discord bots for communities, and typed API clients that end up on npm, most of them with zero dependencies. A pink cat lives on [my site](https://ix-xs.dev) and walks over everything, this page included.
+I design websites for small businesses, put them online and get them found on Google, then stay for the follow-up. On the side: Discord bots for communities, and typed API clients published on npm, most of them with zero dependencies.
 
 <br>
 
@@ -49,6 +49,6 @@ I make websites for small businesses, Discord bots for communities, and typed AP
 
 <br>
 
-<img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/sentier.svg" width="100%" alt="">
+<img src="https://raw.githubusercontent.com/ix-xs/ix-xs/output/signature.svg" width="100%" alt="">
 
-<sub>Every card on this page is drawn by code. The Discord one is live on each visit; the others are redrawn each morning from npm and GitHub. No number here is typed by hand.</sub>
+<sub>Every card on this page is drawn by code. The Discord one is live on each visit, the others are redrawn each morning from npm and GitHub. No number here is typed by hand.</sub>
